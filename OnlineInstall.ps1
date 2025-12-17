@@ -1,31 +1,35 @@
-﻿# Online installer
-# リポジトリ名とモジュール名は同一名にしている前提
-# インストーラーは install.ps1 にしている前提
-# アンインストーラーは uninstall.ps1 にしている前提
-# バージョン管理ファイルは vertion.txt にしている前提
+# Online installer
 
 $ModuleName = "AppointDate"
 $GitHubName = "MuraAtVwnet"
 
+$HomeDirectory = "~/"
 $Module = $ModuleName + ".psm1"
 $Installer = "Install" + $ModuleName + ".ps1"
-$UnInstaller = "UnInstall" + $ModuleName + ".ps1"
+$Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 $Vertion = "Vertion" + $ModuleName + ".txt"
+$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/"
+$OnlineInstaller = $HomeDirectory + "OnlineInstall.ps1"
 
-# ダウンロード
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/$Module -OutFile ~/$Module
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/install.ps1 -OutFile ~/$Installer
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/uninstall.ps1 -OutFile ~/$UnInstaller
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/Vertion.txt -OutFile ~/$Vertion
+$URI = $GithubCommonURI + $Module
+$ModuleFile = $HomeDirectory + $Module
+Invoke-WebRequest -Uri $URI -OutFile $ModuleFile
 
-# インストーラー実行
-& ~/$Installer
+$URI = $GithubCommonURI + "Install.ps1"
+$InstallerFile = $HomeDirectory + $Installer
+Invoke-WebRequest -Uri $URI -OutFile $InstallerFile
 
-# 不要ファイル削除
-Remove-Item ~/$Module
-Remove-Item ~/$Installer
+$URI = $GithubCommonURI + "Uninstall.ps1"
+$OutFile = $HomeDirectory + $Uninstaller
+Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
-# オンラインインストーラー削除
-Remove-Item ~/OnlineInstall.ps1
+$URI = $GithubCommonURI + "Vertion.txt"
+$OutFile = $HomeDirectory + $Vertion
+Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
+& $InstallerFile
+
+Remove-Item $ModuleFile
+Remove-Item $InstallerFile
+Remove-Item $OnlineInstaller
 

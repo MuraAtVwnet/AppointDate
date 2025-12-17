@@ -1,28 +1,21 @@
-﻿# モジュール名
+# Module Name
 $ModuleName = "AppointDate"
 
-# モジュール Path
-$ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
-
-# モジュールを配置する Path
+# Module Path
+if(($PSVersionTable.Platform -eq "Win32NT") -or ($PSVersionTable.Platform -eq $null)){
+	$ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
+}
+else{
+	$ModulePath = Join-Path ($env:HOME) "/.local/share/powershell/Modules"
+}
 $NewPath = Join-Path $ModulePath $ModuleName
 
-# ディレクトリ作成
+# Make Directory
 if( -not (Test-Path $NewPath)){
-	New-Item $NewPath -ItemType Directory
+	New-Item $NewPath -ItemType Directory -ErrorAction SilentlyContinue
 }
 
-# モジュールのコピー
+# Copy Module
 $ModuleFileName = Join-Path $PSScriptRoot ($ModuleName + ".psm1")
 Copy-Item $ModuleFileName $NewPath
-
-# バージョンファイルのコピー
-$Vertion = "Vertion" + $ModuleName + ".txt"
-$VertionFileName = Join-Path $PSScriptRoot "Vertion.txt"
-
-# ローカルインストール時のバージョンファイル
-if( Test-Path $VertionFileName ){
-	Copy-Item $VertionFileName ~/$Vertion
-}
-
 

@@ -41,14 +41,15 @@ PowerShell プロンプトで「apo 日付 時刻」を入力します
 
 年月日を省略すると、今日と判断します。
 
-■ セットの仕方
-#以下を PowerShell プロンプトにコピペしてください
+■ スクリプトインストール方法
+--- 以下を PowerShell プロンプトにコピペ ---
 
 $ModuleName = "AppointDate"
 $GitHubName = "MuraAtVwnet"
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/OnlineInstall.ps1 -OutFile ~/OnlineInstall.ps1
-& ~/OnlineInstall.ps1
-
+$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/OnlineInstall.ps1"
+$OutFile = "~/OnlineInstall.ps1"
+Invoke-WebRequest -Uri $URI -OutFile $OutFile
+& $OutFile
 
 
 ■ オプション
@@ -63,10 +64,11 @@ apo -[TAB]
 最新版があれば、自動ダウンロード & 更新します
 
 
-■ Uninstall 方法
+■ スクリプトアンインストール方法
+--- 以下を PowerShell プロンプトにコピペ ---
 
-~/UnInstallAppointDate.ps1 を実行して下さい
-(問い合わせが来たら Enter)
+~/UninstallAppointDate.ps1
+
 
 ■ 動作確認環境
 Windows PowerShell 5.1
