@@ -52,6 +52,15 @@ function Apo([string]$Date, [string]$time, [string]$ToTime){
         }
     }
 
+	# 今日より前の日付がセットされている場合は来月にする
+	if([String]$PointDate -Match "^[0-9]{1,2}$"){
+		 # 今日より前の日付の場合来月にする
+		$NowDay = (get-date).Day
+		if( [int]$PointDate -lt $NowDay ){
+			$PointDate =  ((Get-Date).AddMonths(1)).ToString("yyyy/M/") + $PointDate
+		}
+	}
+
     # 月日時刻(5/10 17:00) にするとエラーになる対策
     try{
         $DateTime = Get-Date $PointDate
@@ -66,6 +75,15 @@ function Apo([string]$Date, [string]$time, [string]$ToTime){
             return "$Date $time $ToTime は日付として認識できません"
         }
     }
+
+	# 年月だけ指定されていた場合、今日より前の月日の場合は来年にする
+	$SlashCount = [regex]::Matches($PointDate, "/").Count
+	if( $SlashCount -eq 1 ){
+			$NowDateTime = Get-Date
+			if( $NowDateTime -gt $DateTime ){
+				$DateTime = $DateTime.AddYears(1)
+			}
+	}
 
     $strDateTime = ($DateTime).ToString("yyyy/M/d ") + $PointTime
 
